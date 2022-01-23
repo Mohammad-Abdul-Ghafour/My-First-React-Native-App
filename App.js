@@ -3,6 +3,7 @@ import { Camera } from 'expo-camera';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import OpenCamera from './Camera'
+import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 import * as DocumentPicker from 'expo-document-picker';
 // import { writeFile, readFile } from 'react-native-fs';
@@ -34,10 +35,26 @@ export default function App() {
   const readFile = async () => {
     let file = await DocumentPicker.getDocumentAsync()
     console.warn(file)
+    // let x = await FileSystem.getInfoAsync(file.uri)
+    // console.warn(x)
     if(!file.name.includes('.xlsx')){
       alert('Please Choose .xlsx File')
     }else{
       setExcel(file)
+      let file2 = FileSystem.readAsStringAsync(file.uri)
+      console.warn(file2)
+      const workbook = XLSX.read(file.uri,{type:'binary'});
+      const wsName = workbook.SheetNames[0]
+      const ws = workbook.Sheets[wsName]
+      const wsData = XLSX.utils.sheet_to_json(ws,{header:1})
+      const x = XLSX.utils.format_cell(ws)
+      // let arr = []
+      // wsData.map((rowData) => {
+      //   arr.push(rowData)
+      //   alert(rowData.id)
+      // })
+      // // alert(arr)
+      console.warn(wsData)
     }
   }
 
