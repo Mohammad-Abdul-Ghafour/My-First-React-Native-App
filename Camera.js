@@ -5,17 +5,46 @@ import { useState, useEffect } from "react"
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import JsData from './ParcodeData.json'
+import * as FileSystem from 'expo-file-system';
+import XLSX from 'xlsx'
+
 
 
 function OpenCamera(props) {
     // const [openCamera, setopenCamera] = useState(Camera.Constants.Type.back);
     const [scanned, setScanned] = useState(false);
+    let DDP = FileSystem.documentDirectory + 'ParcodeData.json'
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        if(JsData[data]){
-            alert(JsData[data].name + ' ' + JsData[data].price)
-        }
+        // console.warn(data);
+        FileSystem.readAsStringAsync(DDP, { encoding: FileSystem.EncodingType.UTF8 }).then(b64 => {
+            // let wb = XLSX.read(b64, { type: "base64" })
+            // const wsName = wb.SheetNames[0]
+            // const ws = wb.Sheets[wsName]
+            // const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
+            // let data2 = `${data}`
+            // console.warn(2222,data2);
+            // console.warn(typeof(JSON.parse(b64)));
+            let dect = JSON.parse(b64)
+            console.warn(dect[data]);
+            // for(const [key,value] of Object.entries(b64)){
+            //     console.warn(key);
+            //     if(key == data){
+            //         alert(value)
+            //     }
+            // }
+            // console.warn(b64[String(data)]);
+            // for(i = 1 ; i<b64.length;i++)
+            // console.warn(JSON.parse(b64));
+            // if (b64[data]) {
+            //     alert(b64[data].price)
+            // }
+            // const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
+        })
+        // if(JsData[data]){
+        //     alert(JsData[data].name + ' ' + JsData[data].price)
+        // }
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 

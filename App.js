@@ -6,6 +6,7 @@ import OpenCamera from './Camera'
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 import * as DocumentPicker from 'expo-document-picker';
+// import ParcodeData from './ParcodeData.json';
 // import { writeFile, readFile } from 'react-native-fs';
 
 export default function App() {
@@ -44,10 +45,24 @@ export default function App() {
       let file2 = FileSystem.readAsStringAsync(file.uri, { encoding: FileSystem.EncodingType.Base64 }).then(
         b64 => {
           let wb = XLSX.read(b64, { type: "base64" })
-        const wsName = wb.SheetNames[0]
-        const ws = wb.Sheets[wsName]
-        // const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          // console.warn(wsData)
+          const wsName = wb.SheetNames[0]
+          const ws = wb.Sheets[wsName]
+          const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
+          console.warn(wsData)
+          let dect = {}
+          for(let i = 1 ; i<wsData.length ; i++){
+            // console.warn(555,i);
+            for(let j=1 ; j<wsData[i].length ; j++){
+              // console.warn(2222,i,j,i[0]);
+              dect[wsData[i][0]]={[wsData[0][j]]:wsData[i][j]}
+            }
+          }
+          console.warn(11111,dect);
+          if(FileSystem.documentDirectory + "ParcodeData.json"){
+            console.warn(FileSystem.documentDirectory + "ParcodeData.json")
+            FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "ParcodeData.json",JSON.stringify(dect))
+          }
+          // ParcodeData = ws
         })
     }
   }
