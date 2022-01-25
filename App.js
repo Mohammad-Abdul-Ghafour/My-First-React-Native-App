@@ -37,24 +37,18 @@ export default function App() {
     console.warn(file)
     // let x = await FileSystem.getInfoAsync(file.uri)
     // console.warn(x)
-    if(!file.name.includes('.xlsx')){
+    if (!file.name.includes('.xlsx')) {
       alert('Please Choose .xlsx File')
-    }else{
+    } else {
       setExcel(file)
-      let file2 = FileSystem.readAsStringAsync(file.uri)
-      console.warn(file2)
-      const workbook = XLSX.read(file.uri,{type:'binary'});
-      const wsName = workbook.SheetNames[0]
-      const ws = workbook.Sheets[wsName]
-      const wsData = XLSX.utils.sheet_to_json(ws,{header:1})
-      const x = XLSX.utils.format_cell(ws)
-      // let arr = []
-      // wsData.map((rowData) => {
-      //   arr.push(rowData)
-      //   alert(rowData.id)
-      // })
-      // // alert(arr)
-      console.warn(wsData)
+      let file2 = FileSystem.readAsStringAsync(file.uri, { encoding: FileSystem.EncodingType.Base64 }).then(
+        b64 => {
+          let wb = XLSX.read(b64, { type: "base64" })
+        const wsName = wb.SheetNames[0]
+        const ws = wb.Sheets[wsName]
+        // const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
+          // console.warn(wsData)
+        })
     }
   }
 
