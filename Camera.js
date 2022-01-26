@@ -1,6 +1,6 @@
 import React from 'react';
 import { Camera } from 'expo-camera';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Dimensions, Pressable } from 'react-native';
 import { useState, useEffect } from "react"
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 // import swal from 'sweetalert';
 import Dialog, { SlideAnimation, DialogContent } from 'react-native-popup-dialog';
+import Overlay from 'react-native-popup-dialog/dist/components/Overlay';
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
 
 
 function OpenCamera(props) {
@@ -30,10 +32,15 @@ function OpenCamera(props) {
             // console.warn(2222,data2);
             // console.warn(typeof(JSON.parse(b64)));
             let dect = JSON.parse(b64)
-            console.warn(dect)
-            console.warn(dect[data]);
-            setBarData(dect[data])
-            setpopup(true)
+            // console.warn(dect)
+            // console.warn(dect[data]);
+            if (dect[data]) {
+                setBarData(dect[data])
+                setpopup(true)
+            } else {
+                setpopup(true)
+
+            }
             // for(const [key,value] of Object.entries(b64)){
             //     console.warn(key);
             //     if(key == data){
@@ -62,20 +69,105 @@ function OpenCamera(props) {
             {
                 BarData &&
                 <>
-                    <Dialog
+                    {/* <Dialog
                         visible={popup}
                         onTouchOutside={() => {
                             setpopup(false);
                         }}
                     >
+
+
+                        <Image style={styles.tinyLogo} source={{
+                            uri: `${BarData.image}`,
+                            resize: 'contain'
+                        }}></Image>
+
+
                         <DialogContent style={styles.Popup}>
-                            <Image style={styles.tinyLogo} source={{
-                                uri: `${BarData.image}`,
-                                resize: 'contain'
-                            }}></Image>
                             <Text>Hello</Text>
                         </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
+                    <TouchableOpacity style={styles.DialogView} onPress={() => {
+                        setpopup(false)
+                        setBarData(null)
+                    }}>
+
+                    </TouchableOpacity>
+                    <View style={styles.DialogContant}>
+                        <Image style={styles.tinyLogo} source={{
+                            uri: `${BarData.image}`,
+                            resize: 'contain'
+                        }}></Image>
+                        <Text>Price : {BarData.price}</Text>
+                    </View>
+
+                </>
+            }
+            {
+                popup && !BarData &&
+                // <FancyAlert
+                //     visible={true}
+                //     icon={<View style={{
+                //         flex: 1,
+                //         display: 'flex',
+                //         justifyContent: 'center',
+                //         alignItems: 'center',
+                //         backgroundColor: 'red',
+                //         borderRadius: 50,
+                //         width: '100%',
+                //     }}><Text style={{
+                //         fontWeight:'bold',
+                //         fontSize:30
+                //     }}>X</Text></View>}
+                //     style={{ backgroundColor: 'white',marginBottom: 32}}
+                // ><Text style={{
+                //     fontSize:15,
+                // }}>Not Found</Text><Button title='OK' onPress={()=>{
+                //     setpopup(false)
+                // }}></Button></FancyAlert>
+                <>
+                    <TouchableOpacity style={styles.DialogView} onPress={() => {
+                        setBarData(null)
+                    }}>
+
+                    </TouchableOpacity>
+                    <View style={styles.DialogContant2}>
+                        <View style={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: 60,
+                            backgroundColor: 'red',
+                            alignItems: 'center',
+                            borderColor: 'white',
+                            borderWidth: 3,
+                            marginTop: -20,
+                            marginBottom: 10
+                        }}>
+                            <Text style={{
+                                fontWeight: 'bold',
+                                fontSize: 30,
+                                lineHeight: 53,
+                                color:'white'
+                            }}>X</Text>
+                        </View>
+                        <Text>Not Found</Text>
+                        <Pressable title='OK' onPress={() => {
+                            setpopup(false)
+                        }} style={{
+                            marginBottom: 20, marginTop: 10, paddingHorizontal: 40, paddingVertical: 10, backgroundColor: '#FFCD0C', borderRadius: 10,
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 1,
+                            },
+                            shadowOpacity: 0.22,
+                            shadowRadius: 2.22,
+
+                            elevation: 3,
+                        }}>
+                            <Text>OK</Text>
+                        </Pressable>
+                    </View>
                 </>
             }
             <BarCodeScanner
@@ -141,14 +233,63 @@ const styles = StyleSheet.create({
         // resizeMode:'cover'
     },
     tinyLogo: {
-        // position:'absolute',
-        marginTop: -100,
+        // position: 'absolute',
+        marginTop: -140,
         height: Dimensions.get('screen').height / 3,
         width: Dimensions.get('screen').width / 1.5,
         resizeMode: 'contain',
-        zIndex:999
+        zIndex: 999,
     },
-    
+    DialogView: {
+        position: 'absolute',
+        width: Dimensions.get('screen').width,
+        height: Dimensions.get('screen').height,
+        backgroundColor: 'black',
+        opacity: 0.5,
+        zIndex: 20
+    },
+    DialogContant: {
+        position: 'absolute',
+        borderRadius: 10,
+        alignSelf: 'center',
+        marginTop: Dimensions.get('screen').height / 3,
+        width: Dimensions.get('screen').width / 1.2,
+        height: Dimensions.get('screen').height / 3,
+        zIndex: 60,
+        backgroundColor: 'white',
+        opacity: 1,
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+    },
+    DialogContant2: {
+        position: 'absolute',
+        borderRadius: 10,
+        alignSelf: 'center',
+        marginTop: Dimensions.get('screen').height / 3,
+        width: Dimensions.get('screen').width / 1.2,
+        // height: Dimensions.get('screen').height / 3,
+        zIndex: 60,
+        backgroundColor: 'white',
+        opacity: 1,
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+    }
 
 });
 
