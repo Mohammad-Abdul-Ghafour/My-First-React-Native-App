@@ -52,9 +52,11 @@ export default function App() {
           let dect = {}
           for(let i = 1 ; i<wsData.length ; i++){
             // console.warn(555,i);
+            dect[wsData[i][0]]={}
             for(let j=1 ; j<wsData[i].length ; j++){
               // console.warn(2222,i,j,i[0]);
-              dect[wsData[i][0]]={[wsData[0][j]]:wsData[i][j]}
+              // dect[wsData[i][0]]={...wsData[i][0],[wsData[0][j]]:wsData[i][j]}
+              dect[wsData[i][0]][wsData[0][j]]=wsData[i][j]
             }
           }
           console.warn(11111,dect);

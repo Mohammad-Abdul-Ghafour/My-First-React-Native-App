@@ -1,18 +1,21 @@
 import React from 'react';
 import { Camera } from 'expo-camera';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Dimensions } from 'react-native';
 import { useState, useEffect } from "react"
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import JsData from './ParcodeData.json'
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
-
+// import swal from 'sweetalert';
+import Dialog, { SlideAnimation, DialogContent } from 'react-native-popup-dialog';
 
 
 function OpenCamera(props) {
     // const [openCamera, setopenCamera] = useState(Camera.Constants.Type.back);
     const [scanned, setScanned] = useState(false);
+    const [popup, setpopup] = useState(false);
+    const [BarData, setBarData] = useState(null);
     let DDP = FileSystem.documentDirectory + 'ParcodeData.json'
 
     const handleBarCodeScanned = ({ type, data }) => {
@@ -27,7 +30,10 @@ function OpenCamera(props) {
             // console.warn(2222,data2);
             // console.warn(typeof(JSON.parse(b64)));
             let dect = JSON.parse(b64)
+            console.warn(dect)
             console.warn(dect[data]);
+            setBarData(dect[data])
+            setpopup(true)
             // for(const [key,value] of Object.entries(b64)){
             //     console.warn(key);
             //     if(key == data){
@@ -53,6 +59,25 @@ function OpenCamera(props) {
     }
     return (
         <View style={styles.container1}>
+            {
+                BarData &&
+                <>
+                    <Dialog
+                        visible={popup}
+                        onTouchOutside={() => {
+                            setpopup(false);
+                        }}
+                    >
+                        <DialogContent style={styles.Popup}>
+                            <Image style={styles.tinyLogo} source={{
+                                uri: `${BarData.image}`,
+                                resize: 'contain'
+                            }}></Image>
+                            <Text>Hello</Text>
+                        </DialogContent>
+                    </Dialog>
+                </>
+            }
             <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={styles.camera}
@@ -112,6 +137,18 @@ const styles = StyleSheet.create({
     camera: {
         height: Dimensions.get('screen').height / 1.219
     },
+    Popup: {
+        // resizeMode:'cover'
+    },
+    tinyLogo: {
+        // position:'absolute',
+        marginTop: -100,
+        height: Dimensions.get('screen').height / 3,
+        width: Dimensions.get('screen').width / 1.5,
+        resizeMode: 'contain',
+        zIndex:999
+    },
+    
 
 });
 

@@ -13,15 +13,17 @@
     "expo": "~44.0.0",
     "expo-barcode-scanner": "~11.2.0",
     "expo-camera": "~12.1.0",
+    "expo-document-picker": "~10.1.0",
+    "expo-file-system": "~13.1.2",
     "expo-status-bar": "~1.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-fs": "^2.18.0",
+    "react-native-popup-dialog": "^0.18.3",
     "react-native-web": "0.17.1",
-    "xlsx": "^0.17.5",
-    "expo-file-system": "~13.1.2",
-    "expo-document-picker": "~10.1.0"
+    "sweetalert": "^2.1.2",
+    "xlsx": "^0.17.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
