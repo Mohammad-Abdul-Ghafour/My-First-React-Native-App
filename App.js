@@ -6,6 +6,13 @@ import OpenCamera from './Camera'
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 import * as DocumentPicker from 'expo-document-picker';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+import NavigationBar from './Navigation';
 // import ParcodeData from './ParcodeData.json';
 // import { writeFile, readFile } from 'react-native-fs';
 
@@ -73,8 +80,12 @@ export default function App() {
     <View style={styles.container}>
       {open &&
         <>
+        <NavigationContainer>
+          
+        </NavigationContainer>
           <View style={styles.AppBar}>
             <Text style={styles.title} >BarCode Scaner</Text>
+            
           </View>
 
           <TouchableOpacity activeOpacity={0.7} onPress={readFile} style={styles.ImportBTN}>
