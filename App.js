@@ -1,18 +1,11 @@
 import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import OpenCamera from './Camera'
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 import * as DocumentPicker from 'expo-document-picker';
-import { NavigationContainer } from '@react-navigation/native';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import NavigationBar from './Navigation';
 // import ParcodeData from './ParcodeData.json';
 // import { writeFile, readFile } from 'react-native-fs';
 
@@ -20,6 +13,7 @@ export default function App() {
   const [permission, setpermission] = useState(false);
   const [open, setOpen] = useState(true);
   const [excel, setExcel] = useState(null);
+  const [menu, setMenu] = useState(false);
   const getPermission = async () => {
 
   }
@@ -32,6 +26,10 @@ export default function App() {
       setpermission(status === 'granted' ? true : false);
     })();
   }, []);
+
+  const SideBar = () => {
+    setMenu(true)
+  }
 
 
   /* read a workbook */
@@ -57,19 +55,19 @@ export default function App() {
           const wsData = XLSX.utils.sheet_to_json(ws, { header: 1 })
           console.warn(wsData)
           let dect = {}
-          for(let i = 1 ; i<wsData.length ; i++){
+          for (let i = 1; i < wsData.length; i++) {
             // console.warn(555,i);
-            dect[wsData[i][0]]={}
-            for(let j=1 ; j<wsData[i].length ; j++){
+            dect[wsData[i][0]] = {}
+            for (let j = 1; j < wsData[i].length; j++) {
               // console.warn(2222,i,j,i[0]);
               // dect[wsData[i][0]]={...wsData[i][0],[wsData[0][j]]:wsData[i][j]}
-              dect[wsData[i][0]][wsData[0][j]]=wsData[i][j]
+              dect[wsData[i][0]][wsData[0][j]] = wsData[i][j]
             }
           }
-          console.warn(11111,dect);
-          if(FileSystem.documentDirectory + "ParcodeData.json"){
+          console.warn(11111, dect);
+          if (FileSystem.documentDirectory + "ParcodeData.json") {
             console.warn(FileSystem.documentDirectory + "ParcodeData.json")
-            FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "ParcodeData.json",JSON.stringify(dect))
+            FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "ParcodeData.json", JSON.stringify(dect))
           }
           // ParcodeData = ws
         })
@@ -78,14 +76,27 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {
+        menu &&
+        <>
+          <TouchableOpacity style={styles.DialogView} onPress={() => {
+            setMenu(false)
+          }}>
+
+          </TouchableOpacity>
+          <View style={styles.DialogContant}>
+            
+          </View>
+        </>
+      }
       {open &&
         <>
-        <NavigationContainer>
-          
-        </NavigationContainer>
           <View style={styles.AppBar}>
             <Text style={styles.title} >BarCode Scaner</Text>
-            
+            <TouchableOpacity activeOpacity={0.5} onPress={SideBar} style={styles.floatListButton}>
+
+              <Feather name='list' style={styles.Listbutton} />
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity activeOpacity={0.7} onPress={readFile} style={styles.ImportBTN}>
@@ -110,6 +121,8 @@ export default function App() {
           <OpenCamera open={getOpenCamera} />
         </View>
       }
+
+      
     </View>
   );
 }
@@ -181,11 +194,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   ImportBTN: {
+    position: 'absolute',
     backgroundColor: 'white',
     width: Dimensions.get('screen').width / 2.5,
     height: Dimensions.get('screen').height / 8,
-    top: (-Dimensions.get('screen').height / 3.2) + (Dimensions.get('screen').height / 8),
-    left: -100,
+    top: 150,
+    left: 20,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -195,7 +209,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
 
-    elevation: 5,
+    elevation: 2,
     alignItems: 'center',
   },
   ImportText: {
@@ -210,11 +224,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   ExportBTN: {
+    position: 'absolute',
     backgroundColor: 'white',
     width: Dimensions.get('screen').width / 2.5,
     height: Dimensions.get('screen').height / 8,
-    top: -Dimensions.get('screen').height / 3.2,
-    left: 100,
+    top: 150,
+    right: 20,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -224,7 +239,54 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
 
-    elevation: 5,
+    elevation: 2,
     alignItems: 'center',
-  }
+    zIndex:0,
+  },
+  Listbutton: {
+    height: 60,
+    width: 60,
+    textAlign: 'center',
+    lineHeight: 60,
+    fontSize: 30,
+    color: 'white',
+
+  },
+  floatListButton: {
+    position: 'absolute',
+    width: 60,
+    borderRadius: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 8,
+  },
+  DialogView: {
+    position: 'absolute',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+    backgroundColor: 'black',
+    opacity: 0.5,
+    zIndex: 60
+},
+DialogContant: {
+    position: 'absolute',
+    borderRadius: 10,
+    width: Dimensions.get('screen').width / 1.4,
+    height: Dimensions.get('screen').height ,
+    zIndex: 70,
+    backgroundColor: 'white',
+    opacity: 1,
+    right:-2,
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+},
 });
