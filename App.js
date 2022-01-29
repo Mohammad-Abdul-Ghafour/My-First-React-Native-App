@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
@@ -6,6 +6,7 @@ import OpenCamera from './Camera'
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx'
 import * as DocumentPicker from 'expo-document-picker';
+import logo from './assets/favicon.png'
 // import ParcodeData from './ParcodeData.json';
 // import { writeFile, readFile } from 'react-native-fs';
 
@@ -85,7 +86,39 @@ export default function App() {
 
           </TouchableOpacity>
           <View style={styles.DialogContant}>
-            
+            <View style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              backgroundColor:'white',
+              // borderWidth:0,
+              // borderBottomWidth: 1,
+              // borderBottomColor:'white',
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 10,
+                height: 20,
+              },
+              shadowRadius: 3.84,
+              shadowOpacity: 1,
+
+              elevation: 4,
+            }}>
+              <Image style={styles.tinyLogo} source={require('./assets/favicon.png')}></Image>
+              <Text style={{
+                marginTop: 70,
+                fontSize: 30,
+                color: 'black',
+                zIndex: 999,
+                // position:'absolute'
+              }}>App Menu</Text>
+            </View>
+            <View style={{
+              flex: 5,
+              // backgroundColor:'blue',
+            }}>
+              <Text>Import Image</Text>
+            </View>
           </View>
         </>
       }
@@ -122,7 +155,7 @@ export default function App() {
         </View>
       }
 
-      
+
     </View>
   );
 }
@@ -241,7 +274,7 @@ const styles = StyleSheet.create({
 
     elevation: 2,
     alignItems: 'center',
-    zIndex:0,
+    zIndex: 0,
   },
   Listbutton: {
     height: 60,
@@ -269,24 +302,36 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.5,
     zIndex: 60
-},
-DialogContant: {
+  },
+  DialogContant: {
     position: 'absolute',
     borderRadius: 10,
     width: Dimensions.get('screen').width / 1.4,
-    height: Dimensions.get('screen').height ,
+    height: Dimensions.get('screen').height,
+    // flex:1,
     zIndex: 70,
     backgroundColor: 'white',
     opacity: 1,
-    right:-2,
+    right: -2,
+    // alignItems:'center',
     shadowColor: "#000",
     shadowOffset: {
-        width: 0,
-        height: 1,
+      width: 0,
+      height: 1,
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
     elevation: 3,
-},
+  },
+  tinyLogo: {
+    // position: 'absolute',
+    // backgroundColor:'blue',
+    // marginTop: -140,
+    height: Dimensions.get('screen').height / 14,
+    width: Dimensions.get('screen').width / 6,
+    resizeMode: 'contain',
+    zIndex: 999,
+    marginTop: 60
+  },
 });
