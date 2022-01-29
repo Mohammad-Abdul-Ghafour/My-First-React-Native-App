@@ -31,7 +31,8 @@
     "react-native-sweet-alert": "^3.5.0",
     "react-native-web": "0.17.1",
     "sweetalert": "^2.1.2",
-    "xlsx": "^0.17.5"
+    "xlsx": "^0.17.5",
+    "@react-native-community/slider": "4.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

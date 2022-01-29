@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Switch } from 'react-native';
+// import { SliderBase } from '@react-native-community/slider';
 import { Camera } from 'expo-camera';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
@@ -15,6 +16,9 @@ export default function App() {
   const [open, setOpen] = useState(true);
   const [excel, setExcel] = useState(null);
   const [menu, setMenu] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  
   const getPermission = async () => {
 
   }
@@ -90,7 +94,7 @@ export default function App() {
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
-              backgroundColor:'white',
+              backgroundColor: 'white',
               // borderWidth:0,
               // borderBottomWidth: 1,
               // borderBottomColor:'white',
@@ -103,8 +107,8 @@ export default function App() {
               shadowOpacity: 1,
 
               elevation: 4,
+              marginBottom: 20
             }}>
-              <Image style={styles.tinyLogo} source={require('./assets/favicon.png')}></Image>
               <Text style={{
                 marginTop: 70,
                 fontSize: 30,
@@ -113,12 +117,44 @@ export default function App() {
                 // position:'absolute'
               }}>App Menu</Text>
             </View>
+            
             <View style={{
-              flex: 5,
+              flex: 4,
+              flexDirection: 'row',
+              // alignItems:'baseline',
+              height:20,
+              width:250,
+              justifyContent:'space-between',
               // backgroundColor:'blue',
             }}>
-              <Text>Import Image</Text>
+              <Text style={{
+                fontSize:18,
+                marginTop:10
+              }}>Import Image</Text>
+              <View style={{
+                // height:50,
+                // backgroundColor:'red'
+              }}>
+
+              <Switch
+                trackColor={{ false: '#767577', true: '#81b0ff' }}
+                thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+              </View>
             </View>
+
+            <View style={{
+              flex:1.5,
+              // backgroundColor:'red',
+              alignItems:'center'
+            }}>
+
+            <Image style={styles.tinyLogo} source={require('./assets/favicon.png')}></Image>
+            </View>
+
           </View>
         </>
       }
@@ -313,7 +349,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     opacity: 1,
     right: -2,
-    // alignItems:'center',
+    alignItems:'center',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -328,10 +364,11 @@ const styles = StyleSheet.create({
     // position: 'absolute',
     // backgroundColor:'blue',
     // marginTop: -140,
-    height: Dimensions.get('screen').height / 14,
-    width: Dimensions.get('screen').width / 6,
+    height: Dimensions.get('screen').height / 6,
+    width: Dimensions.get('screen').width / 2,
     resizeMode: 'contain',
     zIndex: 999,
-    marginTop: 60
+    marginTop: 15
+    // lineHeight:200
   },
 });
